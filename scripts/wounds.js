@@ -108,7 +108,7 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html) => {
   const loggedInUserListItem = html.find(`[class="ability "]`);
 
   loggedInUserListItem.append(
-    "<a class='wound-button' data-action='wound'><img class='wound-image' src='icons/arm-sling.svg'></a>"
+    "<a class='wound-button' data-action='wound'><img class='wound-image' src='modules/RoleNPlay_fvtt_5e_extra_rules/icons/arm-sling.svg'></a>"
   );
 });
 
