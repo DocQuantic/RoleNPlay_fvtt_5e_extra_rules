@@ -1,0 +1,17 @@
+.dnd5e.sheet.actor .ability-scores .ability .wound-button {
+    left: 2px;
+    top: 20px;
+    position: absolute;
+    display: block;
+}
+
+.dnd5e.sheet.actor .wound-button {
+    color: #4b4a44;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.wound-image {
+    width: 20px;
+    border: none;
+}

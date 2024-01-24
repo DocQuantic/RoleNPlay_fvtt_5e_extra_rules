@@ -1,0 +1,18 @@
+{
+    "name": "RoleNPlay_fvtt_5e_extra_rules",
+    "title": "Wounds 5e",
+    "description": "A simple module which adds support for the wounds rule introduced by Role'N Play.",
+    "authors": [
+      {
+        "name": "DocQuantic"
+      }
+    ],
+    "scripts": [
+      "scripts/wounds.js"
+    ],
+    "styles": [
+      "styles/wounds.css"
+    ],
+    "version": "0.1",
+    "minimumCoreVersion": "1.1"
+  }
