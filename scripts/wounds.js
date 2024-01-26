@@ -9,6 +9,7 @@ class WoundConfig extends FormApplication {
   
     const overrides = {
       height: 'auto',
+      width: 'auto',
       id: 'todo-list',
       template: "modules/RoleNPlay_fvtt_5e_extra_rules/templates/wounds.hbs",
       title: 'Configuration des blessures',

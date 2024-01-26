@@ -1,11 +1,12 @@
-<form>
-    <div class="wounds flexcol">
-        <label>Type de blessure : {{ab}}</label>
-        <input type="text" name="exampleInput" style="color: {{color}}" value="{{msg}}">
+<form style="z-index: 103;width: 500px;height: 413px;left: 192.5px;top: 217px;">
+    <h3 class="form-header-wound">Capacité : {{ab}}</h3>
+    <div class="form-group-wound">
+        <label>Est blessé ?</label>
+        <input type="checkbox" name="isWounded" title="Est blessée ?" data-dtype="Boolean" />
     </div>
-    <footer class="sheet-footer flexrow">
-        <button type="submit" name="submit">
-            <i class="fa fa-check"></i> OK
-        </button>
-    </footer>
+    <div class="form-group-wound">
+        <label>Jours avant guérison : </label>
+
+        <input type="text" value="3" name="label" data-dtype="String" />
+    </div>
 </form>
