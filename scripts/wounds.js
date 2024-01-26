@@ -1,4 +1,9 @@
 class WoundConfig extends FormApplication {
+  constructor(ability) {
+    super();
+    this.ability = ability;
+  }
+
   static get defaultOptions() {
     const defaults = super.defaultOptions;
   
@@ -6,8 +11,7 @@ class WoundConfig extends FormApplication {
       height: 'auto',
       id: 'todo-list',
       template: "modules/RoleNPlay_fvtt_5e_extra_rules/templates/wounds.hbs",
-      title: 'Blessure',
-      ability: 'str'
+      title: 'Configuration des blessures',
     };
   
     const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
@@ -18,7 +22,7 @@ class WoundConfig extends FormApplication {
   getData() {
     // Send data to the template
     return {
-      color: 'red',
+      ab: this.ability
     };
   }
 }
@@ -33,9 +37,14 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
     );
 
     html.on('click', '.wound-button', (event) => {
-      actor.setFlag('midi-qol', 'flags.midi-qol.disadvantage.ability.check.dex', 0);
+      let abilityDict = {
+        "str": { Name: "Force"},
+        "dex": { Name: "Dextérité" },
+      }
+      
       let ab =  event.target.closest("li.ability").dataset.ability;
-      console.log(ab);
+      
+      new WoundConfig(abilityDict[ab].Name).render(true)
     });
   }
 });
