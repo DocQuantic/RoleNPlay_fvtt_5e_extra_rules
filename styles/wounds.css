@@ -1,6 +1,6 @@
 .dnd5e.sheet.actor .ability-scores .ability .wound-button {
     left: 2px;
-    top: 20px;
+    top: 28px;
     position: absolute;
     display: block;
 }
@@ -11,7 +11,6 @@
     font-weight: normal;
 }
 
-.wound-image {
-    width: 20px;
-    border: none;
+a.wound-button:hover{
+    text-shadow: 0 0 8px var(--color-shadow-primary);
 }
