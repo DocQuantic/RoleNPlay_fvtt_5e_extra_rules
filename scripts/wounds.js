@@ -1,3 +1,12 @@
+let abilityDict = {
+  "str": { Name: "Force"},
+  "dex": { Name: "Dextérité" },
+  "con": { Name: "Constitution"},
+  "int": { Name: "Intelligence"},
+  "wis": { Name: "Sagesse"},
+  "cha": { Name: "Charisme"}
+}
+
 class WoundConfig extends FormApplication {
   constructor(ability) {
     super();
@@ -9,8 +18,7 @@ class WoundConfig extends FormApplication {
   
     const overrides = {
       height: 'auto',
-      width: 'auto',
-      id: 'todo-list',
+      id: 'wound-conf',
       template: "modules/RoleNPlay_fvtt_5e_extra_rules/templates/wounds.hbs",
       title: 'Configuration des blessures',
     };
@@ -30,6 +38,10 @@ class WoundConfig extends FormApplication {
 
 Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
   const actor = actorSheet5eCharacter.actor;
+  actor.setFlag('midi-qol', 'disadvantage.ability.check.dex', 0);
+
+  console.log(actor);
+
   if(actor.type=='character'){
     const abilityItem = html.find(`[class="ability "]`);
 
@@ -37,17 +49,25 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
       "<a class='wound-button' data-action='wound'><i class='fas fa-heartbeat'></i></a>"
     );
 
-    html.on('click', '.wound-button', (event) => {
-      let abilityDict = {
-        "str": { Name: "Force"},
-        "dex": { Name: "Dextérité" },
-      }
-      
+    html.on('click', '.wound-button', (event) => {      
       let ab =  event.target.closest("li.ability").dataset.ability;
       
       new WoundConfig(abilityDict[ab].Name).render(true)
     });
   }
+});
+
+Hooks.on('updateActor', (actorSheet5eCharacter, html, data) => {
+  const actor = actorSheet5eCharacter.actor;
+
+  for (const key of Object.keys(abilityDict)) { 
+    let flag = 'disadvantage.ability.check.' + key;
+    console.log(flag);
+
+    actor.setFlag('midi-qol', flag, 0);
+    console.log(key + ": "); 
+    console.log(abilityDict[key]);
+ };
 });
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {

@@ -38,4 +38,12 @@ form .form-group-wound {
     flex: 2;
     color: #4b4a44;
     font-weight: bold;
-  }
+}
+
+.form-group-wound input[type="text"] {
+  height: calc(100% - 2px);
+  width: 50px;
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+  color: #191813;
+}

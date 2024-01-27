@@ -1,12 +1,20 @@
-<form style="z-index: 103;width: 500px;height: 413px;left: 192.5px;top: 217px;">
+<form style="z-index: 103;width: 265px;height: 413px;left: 192.5px;top: 217px;">
     <h3 class="form-header-wound">Capacité : {{ab}}</h3>
     <div class="form-group-wound">
         <label>Est blessé ?</label>
-        <input type="checkbox" name="isWounded" title="Est blessée ?" data-dtype="Boolean" />
+        <input type="checkbox" name="is-wounded" title="Est blessée ?" data-dtype="Boolean" />
     </div>
     <div class="form-group-wound">
         <label>Jours avant guérison : </label>
 
-        <input type="text" value="3" name="label" data-dtype="String" />
+        <input type="text" value="0" name="heal-days-label" data-dtype="String" />
     </div>
+    <footer class="sheet-footer flexrow">
+        <button class="dialog-button" type="submit" name="submit">
+            <i class="fa fa-check"></i> OK
+        </button>
+        <button class="dialog-button" type="cancel" name="cancel">
+            <i class="fa fa-times"></i> Annuler
+        </button>
+    </footer>
 </form>
