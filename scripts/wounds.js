@@ -56,21 +56,13 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
   }
 });
 
-Hooks.on('updateActor', (actor5e) => {
-  const actor = actor5e;
-
-  if(actor.type=='character'){
-    for (const key of Object.keys(abilityDict)) { 
-      let flagQOL = 'disadvantage.ability.check.' + key;
-      let flagWounded = key + '.isWounded';
-      let flagDays = key + '.daysToCure';
-  
-      actor.setFlag('midi-qol', flagQOL, 0);
-      //actor.setFlag('wounds5e', flagWounded, 0);
-      //actor.setFlag('wounds5e', flagDays, 0);
-    };
-  }  
-});
+Hooks.on('preCreateActor', (doc, data, options, userId) => {
+  if (doc.type === 'character') {
+      doc.updateSource({'flags.midi-qol.disadvantage.ability.check.???': 0})
+      doc.updateSource({'flags.wounds5e.dex.isWounded': 0})
+  }
+  console.log(doc)
+})
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag(ToDoList.ID);
