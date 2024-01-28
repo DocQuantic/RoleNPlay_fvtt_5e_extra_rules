@@ -40,7 +40,6 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
   const actor = actorSheet5eCharacter.actor;
   actor.setFlag('midi-qol', 'disadvantage.ability.check.dex', 0);
 
-  console.log(actor);
 
   if(actor.type=='character'){
     const abilityItem = html.find(`[class="ability "]`);
@@ -57,17 +56,20 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
   }
 });
 
-Hooks.on('updateActor', (actorSheet5eCharacter, html, data) => {
-  const actor = actorSheet5eCharacter.actor;
+Hooks.on('updateActor', (actor5e) => {
+  const actor = actor5e;
 
-  for (const key of Object.keys(abilityDict)) { 
-    let flag = 'disadvantage.ability.check.' + key;
-    console.log(flag);
-
-    actor.setFlag('midi-qol', flag, 0);
-    console.log(key + ": "); 
-    console.log(abilityDict[key]);
- };
+  if(actor.type=='character'){
+    for (const key of Object.keys(abilityDict)) { 
+      let flagQOL = 'disadvantage.ability.check.' + key;
+      let flagWounded = key + '.isWounded';
+      let flagDays = key + '.daysToCure';
+  
+      actor.setFlag('midi-qol', flagQOL, 0);
+      //actor.setFlag('wounds5e', flagWounded, 0);
+      //actor.setFlag('wounds5e', flagDays, 0);
+    };
+  }  
 });
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
