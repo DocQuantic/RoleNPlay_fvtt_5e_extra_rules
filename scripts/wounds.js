@@ -24,7 +24,7 @@ class WoundConfig extends FormApplication {
       id: 'wound-conf',
       template: "modules/RoleNPlay_fvtt_5e_extra_rules/templates/wounds.hbs",
       title: 'Configuration des blessures',
-      closeOnSubmit: true, // do not close when submitted
+      closeOnSubmit: false, // do not close when submitted
       submitOnChange: true, // submit when any input changes
     };
   
@@ -45,38 +45,19 @@ class WoundConfig extends FormApplication {
   async _updateObject(event, formData) {
     const expandedData = foundry.utils.expandObject(formData);
     
-    await setProperty(this.actor, 'flags.wounds5e.' + this.ability + '.isWounded', expandedData["isWounded"]);
-    await setProperty(this.actor, 'flags.wounds5e.' + this.ability + '.daysToHeal', expandedData["daysToHeal"]);
-    
     if(event["type"]=='submit'){
+      this.actor.update({
+        [`flags.wounds5e.${this.ability}.isWounded`]: expandedData['daysToHeal'] == 0 ? false : expandedData['isWounded'],
+        [`flags.wounds5e.${this.ability}.daysToHeal`]: expandedData['daysToHeal'],
+        [`flags.midi-qol.disadvantage.ability.check.${this.ability}`]: expandedData['isWounded'] ? 1 : 0
+      })
       
-      if(await getProperty(this.actor, 'flags.wounds5e.' + this.ability + '.daysToHeal') == 0){
-        await setProperty(this.actor, 'flags.wounds5e.' + this.ability + '.isWounded', false);
-      }
-      
-      if(await getProperty(this.actor, 'flags.wounds5e.' + this.ability + '.isWounded')){
-        await setProperty(this.actor, 'flags.midi-qol.disadvantage.ability.check.' + this.ability, 1);
-      } else {
-        await setProperty(this.actor, 'flags.midi-qol.disadvantage.ability.check.' + this.ability, 0);
-      }
+      this.actor.update({
+      })
       
       this.close();
     }
-  }
-
-  activateListeners(html) {
-    html.on('click', "[dialog-button]", this._handleButtonClick);
-  }
-
-  async _handleButtonClick(event) {
-    console.log('Button Clicked!');
-    /*
-    const clickedElement = $(event.currentTarget);
-    const action = clickedElement.data().action;
-    const toDoId = clickedElement.parents('[data-todo-id]')?.data()?.todoId;
-    
-    console.log('Button Clicked!');
-    */
+  
   }
 }
 
