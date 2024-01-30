@@ -40,7 +40,7 @@ form .form-group-wound {
     font-weight: bold;
 }
 
-.form-group-wound input[type="text"] {
+.form-group-wound input[type="number"] {
   height: calc(100% - 2px);
   width: 50px;
   border: 1px solid #7a7971;
