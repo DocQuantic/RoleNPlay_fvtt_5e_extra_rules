@@ -8,7 +8,7 @@ let abilityDict = {
 }
 
 class WoundConfig extends FormApplication {
-  constructor(ability) {
+  constructor(ability, isWounded, daysToHeal) {
     super();
     this.ability = ability;
   }
@@ -31,7 +31,9 @@ class WoundConfig extends FormApplication {
   getData() {
     // Send data to the template
     return {
-      ab: this.ability
+      ability: this.ability,
+      isWounded: this.isWounded,
+      daysToHeal: this.daysToHeal,
     };
   }
 }
@@ -49,9 +51,13 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
     );
 
     html.on('click', '.wound-button', (event) => {      
-      let ab =  event.target.closest("li.ability").dataset.ability;
+      let ability =  event.target.closest("li.ability").dataset.ability;
+      let flagIsWounded = 'flags.wounds5e.' + ability + '.isWounded';
+      let flagDaysToHeal = 'flags.wounds5e.' + ability + '.daysToHeal';
+
+      console.log(getProperty(actor, 'flags.midi-qol.disadvantage.str.check'));
       
-      new WoundConfig(abilityDict[ab].Name).render(true)
+      new WoundConfig(abilityDict[ability].Name).render(true)
     });
   }
 });
@@ -60,9 +66,6 @@ Hooks.on('renderActorSheet', (actorSheet5eCharacter, html, data) => {
 Hooks.on('preCreateActor', (doc, data, options, userId) => {
   if (doc.type === 'character') {
     for (const key of Object.keys(abilityDict)) { 
-      let flagQOL = 'flags.midi-qol.disadvantage.ability.check.' + key;
-      let flagWounds = 'flags.wounds5e.' + key;
-
       doc.updateSource({'flags.midi-qol.disadvantage' : {
         'str.check.': 0,
         'dex.check' : 0,
@@ -73,20 +76,19 @@ Hooks.on('preCreateActor', (doc, data, options, userId) => {
       }});
       doc.updateSource({'flags.wounds5e': {
         'str.isWounded': 0,
-        'str.daysToRest': 0,
+        'str.daysToHeal': 0,
         'dex.isWounded': 0,
-        'dex.daysToRest': 0,
+        'dex.daysToHeal': 0,
         'con.isWounded': 0,
-        'con.daysToRest': 0,
+        'con.daysToHeal': 0,
         'int.isWounded': 0,
-        'int.daysToRest': 0,
+        'int.daysToHeal': 0,
         'wis.isWounded': 0,
-        'wis.daysToRest': 0,
+        'wis.daysToHeal': 0,
         'cha.isWounded': 0,
-        'cha.daysToRest': 0}
+        'cha.daysToHeal': 0}
       });
     };
-    console.log(doc);
   }
 })
 
