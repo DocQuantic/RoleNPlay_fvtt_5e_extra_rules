@@ -88,25 +88,30 @@ Hooks.on('renderActorSheet', (actorSheet, html, data) => {
 
 Hooks.on('preCreateActor', (actor, data, options, userId) => {
   if (actor.type === 'character') {
-    actor.updateSource({'flags.wounds5e': {
-      'str.isWounded' : false,
-      'str.daysToHeal' : 0,
-      'dex.isWounded' : false,
-      'dex.daysToHeal' : 0,
-      'con.isWounded' : false,
-      'con.daysToHeal' : 0,
-      'int.isWounded' : false,
-      'int.daysToHeal' : 0,
-      'wis.isWounded' : false,
-      'wis.daysToHeal' : 0,
-      'cha.isWounded' : false,
-      'cha.daysToHeal' : 0}
+    Object.keys(abilityDict).forEach(function(key) {
+      actor.updateSource({'flags.wounds5e': {
+        [`${key}.isWounded`] : false,
+        [`${key}.daysToHeal`] : 0}
+      })
     });
   }
 })
 
 Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
-  console.log(data["newDay"]);
+  Object.keys(abilityDict).forEach(function(key) {
+    let daysToHeal = getProperty(actor, 'flags.wounds5e.' + key + '.daysToHeal');
+    
+    if(daysToHeal>0){
+      let isWounded = getProperty(actor, 'flags.wounds5e.' + key + '.isWounded');
+
+      this.actor.update({
+        [`flags.wounds5e.${key}.daysToHeal`]: daysToHeal-1,
+        [`flags.wounds5e.${key}.isWounded`]: daysToHeal-1 == 0 ? false : isWounded,
+        [`flags.midi-qol.disadvantage.ability.check.${key}`]: getProperty(actor, 'flags.wounds5e.' + key + '.isWounded') ? 1 : 0
+      })
+    }
+  });
+  console.log(actor);
 })
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
