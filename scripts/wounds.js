@@ -24,8 +24,8 @@ class WoundConfig extends FormApplication {
       id: 'wound-conf',
       template: "modules/RoleNPlay_fvtt_5e_extra_rules/templates/wounds.hbs",
       title: 'Configuration des blessures',
-      closeOnSubmit: false, // do not close when submitted
-      submitOnChange: true, // submit when any input changes
+      closeOnSubmit: false,
+      submitOnChange: true
     };
   
     const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
@@ -48,11 +48,11 @@ class WoundConfig extends FormApplication {
     if(event["type"]=='submit'){
       this.actor.update({
         [`flags.wounds5e.${this.ability}.isWounded`]: expandedData['daysToHeal'] == 0 ? false : expandedData['isWounded'],
-        [`flags.wounds5e.${this.ability}.daysToHeal`]: expandedData['daysToHeal'],
-        [`flags.midi-qol.disadvantage.ability.check.${this.ability}`]: expandedData['isWounded'] ? 1 : 0
+        [`flags.wounds5e.${this.ability}.daysToHeal`]: expandedData['daysToHeal']
       })
       
       this.actor.update({
+        [`flags.midi-qol.disadvantage.ability.check.${this.ability}`]: expandedData['isWounded'] ? 1 : 0
       })
       
       this.close();
@@ -63,7 +63,7 @@ class WoundConfig extends FormApplication {
 
 Hooks.on('renderActorSheet', (actorSheet, html, data) => {
   actor = actorSheet.actor
-  console.log(actor)
+  
   if(actor.type=='character'){
     const abilityItem = html.find(`[class="ability "]`);
 
@@ -75,10 +75,6 @@ Hooks.on('renderActorSheet', (actorSheet, html, data) => {
       let ability =  event.target.closest("li.ability").dataset.ability;
       let flagIsWounded = 'flags.wounds5e.' + ability + '.isWounded';
       let flagDaysToHeal = 'flags.wounds5e.' + ability + '.daysToHeal';
-
-      let flagVal = getProperty(actor, flagDaysToHeal);
-
-      console.log(flagVal);
       
       new WoundConfig(actor, ability, getProperty(actor, flagIsWounded), getProperty(actor, flagDaysToHeal)).render(true)
     });
@@ -98,20 +94,26 @@ Hooks.on('preCreateActor', (actor, data, options, userId) => {
 })
 
 Hooks.on('dnd5e.preRestCompleted', (actor, data) => {
-  Object.keys(abilityDict).forEach(function(key) {
-    let daysToHeal = getProperty(actor, 'flags.wounds5e.' + key + '.daysToHeal');
-    
-    if(daysToHeal>0){
+  if(data["newDay"]==true){
+    Object.keys(abilityDict).forEach(function(key) {
+      let newDaysToHeal = getProperty(actor, 'flags.wounds5e.' + key + '.daysToHeal')-1;
       let isWounded = getProperty(actor, 'flags.wounds5e.' + key + '.isWounded');
 
-      this.actor.update({
-        [`flags.wounds5e.${key}.daysToHeal`]: daysToHeal-1,
-        [`flags.wounds5e.${key}.isWounded`]: daysToHeal-1 == 0 ? false : isWounded,
-        [`flags.midi-qol.disadvantage.ability.check.${key}`]: getProperty(actor, 'flags.wounds5e.' + key + '.isWounded') ? 1 : 0
-      })
-    }
-  });
-  console.log(actor);
+      if(newDaysToHeal==0){
+        isWounded=false;
+
+        this.actor.update({
+          [`flags.wounds5e.${key}.daysToHeal`]: newDaysToHeal,
+          [`flags.wounds5e.${key}.isWounded`]: isWounded,
+          [`flags.midi-qol.disadvantage.ability.check.${key}`]: 0
+        })
+      } else if(newDaysToHeal>0) {
+        this.actor.update({
+          [`flags.wounds5e.${key}.daysToHeal`]: newDaysToHeal
+        })
+      }
+    });
+  }
 })
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
