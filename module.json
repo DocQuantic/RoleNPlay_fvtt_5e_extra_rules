@@ -7,6 +7,13 @@
         "name": "DocQuantic"
       }
     ],
+    "system": ["dnd5e"],
+    "relationships": {
+      "requires": [{
+        "id": "midi-qol",
+        "type": "module"
+      }]
+    },
     "scripts": [
       "scripts/wounds.js"
     ],
